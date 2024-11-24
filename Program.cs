@@ -18,11 +18,9 @@ namespace MiniAtmProject
     {
         public static Account? account { get; set; }
 
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var accounts = Database.CreateOrGetDatabase().FirstOrDefault();
-
-
 
             string selectionStart;
             while (true) 
@@ -97,7 +95,7 @@ namespace MiniAtmProject
             Console.Write("Ana Sayfa>");
         }
 
-        private static void GetStartMenu()
+        public static void GetStartMenu()
         {
             Console.Clear();
             Console.WriteLine(ATM.StartMenu);

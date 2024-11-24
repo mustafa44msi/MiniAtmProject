@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,24 +41,54 @@ namespace MiniAtmProject
         {
             var accounts = Database.CreateOrGetDatabase();
             Console.Clear();
-            Console.Write("Lütfen İsminizi Girin: ");
-            string Name = Console.ReadLine()!;
-            Console.Write("Lütfen Şifrenizi Girin: ");
-            string Pass = Console.ReadLine()!;
+            string Name;
+            string Pass;
+            int maxAttemps = 3;
+            Account? User = null;
 
-            CurrentUser = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower() && account.Pass == Pass);
-            if (CurrentUser == null)
+            while (true)
             {
-                Console.Clear();
-                Console.WriteLine("Kullanıcı Bulunamadı.");
-                Thread.Sleep(1000);
+                Console.Write("Lütfen İsminizi Girin: ");
+                Name = Console.ReadLine()!;
+                User = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower());
+                if (User != null)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.Write("Eksik veya Hatalı Bir İsim Girdiniz. Lütfen Tekrar Deneyiniz.");
+                    Thread.Sleep(1500);
+                    Console.Clear();
+                }
             }
-            else
+
+            for (int attemp = 1; attemp <= maxAttemps; attemp++)
             {
-                Console.Clear();
-                Console.WriteLine("Giriş Başarılı.");
-                Thread.Sleep(1000);
-                
+                Console.Write("Lütfen Şifrenizi Girin: ");
+                Pass = Console.ReadLine()!;
+                if (User.Pass == Pass)
+                {
+                    CurrentUser = User;
+                    break;
+                }
+                else if (attemp == maxAttemps)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Tüm giriş haklarınızı tükettiniz. Ana Menüye Dönülüyor.");
+                    Thread.Sleep(1000);
+                    Program.Main(new string[] { });
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.Write($"Eksik veya Hatalı Bir Şifre Girdiniz. {maxAttemps - attemp} hakkınız kaldı. Lütfen Tekrar Deneyiniz.");
+                    Thread.Sleep(1500);
+                    Console.Clear();
+                }
+
+
             }
         }
 
@@ -68,6 +99,7 @@ namespace MiniAtmProject
 
         public static void Deposit(Account CurrentUser)
         {
+
             Console.Write("Yatırmak İstediğiniz Tutar: ");
             decimal yatirilacakTutar = decimal.Parse(Console.ReadLine()!);
             CurrentUser.Balance += yatirilacakTutar;
