@@ -20,9 +20,9 @@ namespace MiniAtmProject
 
         private static void Main(string[] args)
         {
-            var accounts = Database.CreateOrGetDatabase();
+            var accounts = Database.CreateOrGetDatabase().FirstOrDefault();
 
-           
+
 
             string selectionStart;
             while (true) 
@@ -35,6 +35,7 @@ namespace MiniAtmProject
                 }
                 else if (selectionStart == "2")
                 {
+                    ATM.Login();
                     break;
                 }
                 else if (selectionStart == "3")
@@ -50,49 +51,6 @@ namespace MiniAtmProject
 
             }
 
-            Console.Clear();
-            Console.Write("Lütfen isminizi Girin: ");   
-            string Name;
-
-            while (true)
-            {
-
-               Name = Console.ReadLine()!;
-                account = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower());
-                if (account != null) 
-                { 
-                    break;
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.Write("Eksik veya Hatalı Bir İsim Girdiniz. Lütfen Tekrar Deneyiniz.");
-                    Thread.Sleep(1500);
-                    Console.Clear();
-                    Console.Write("Lütfen İsminizi Girin: ");
-                }
-            }
-
-            Console.Write("Lütfen Şifrenizi Girin: ");
-            string Pass;
-
-            while (true)
-            {
-                Pass = Console.ReadLine()!;
-                if (account.Pass == Pass) 
-                { 
-                    break; 
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.Write("Eksik veya Hatalı Bir Şifre Girdiniz. Lütfen Tekrar Deneyiniz.");
-                    Thread.Sleep(1500);
-                    Console.Clear();
-                    Console.Write("Lütfen Şifrenizi Girin: ");
-                }
-            }
-
             string selection;
             while (true)
             {
@@ -102,20 +60,25 @@ namespace MiniAtmProject
                 {
                     case "1":
                         Console.Clear();
-                        ATM.Withdraw(account);
+                        ATM.Withdraw(accounts);
                         Thread.Sleep(1500);
                         break;
                     case "2":
                         Console.Clear();
-                        ATM.Deposit(account);
+                        ATM.Deposit(accounts);
                         Thread.Sleep(1500);
                         break;
                     case "3":
                         Console.Clear();
-                        ATM.ShowBalance(account);
+                        ATM.ShowBalance(accounts);
                         Thread.Sleep(1500);
                         break;
                     case "4":
+                        Console.Clear();
+                        ATM.LogOut();
+                        Main(args);
+                        break;
+                    case "5":
                         ATM.Quit();
                         break;
                     default:
@@ -130,32 +93,17 @@ namespace MiniAtmProject
         private static void GetMainMenu()
         {
             Console.Clear();
-            Console.WriteLine(MainMenu);
+            Console.WriteLine(ATM.MainMenu);
             Console.Write("Ana Sayfa>");
         }
 
         private static void GetStartMenu()
         {
             Console.Clear();
-            Console.WriteLine(StartMenu);
+            Console.WriteLine(ATM.StartMenu);
             Console.Write("Ana Sayfa>");
         }
 
-        private static string MainMenu => $@"Merhaba {account?.AccountID} - {account?.Name} Anlık Olarak {account?.Balance} TL Bakiyen var.
-Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
-
-1-Para Çek
-2-Para Yatır
-3-Bakiye Göster
-4-Çıkış Yap
-";
-
-        private static string StartMenu => @"Merhaba Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
-
-1-Kayıt Ol
-2-Giriş Yap
-3-Çıkış Yap
-";
     }
 
 }

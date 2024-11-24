@@ -36,6 +36,35 @@ namespace MiniAtmProject
             }
             accounts.Add(newUser);
         }
+        public static void Login()
+        {
+            var accounts = Database.CreateOrGetDatabase();
+            Console.Clear();
+            Console.Write("Lütfen İsminizi Girin: ");
+            string Name = Console.ReadLine()!;
+            Console.Write("Lütfen Şifrenizi Girin: ");
+            string Pass = Console.ReadLine()!;
+
+            CurrentUser = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower() && account.Pass == Pass);
+            if (CurrentUser == null)
+            {
+                Console.Clear();
+                Console.WriteLine("Kullanıcı Bulunamadı.");
+                Thread.Sleep(1000);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Giriş Başarılı.");
+                Thread.Sleep(1000);
+                
+            }
+        }
+
+        public static void LogOut()
+        {
+            CurrentUser = null;
+        }
 
         public static void Deposit(Account CurrentUser)
         {
@@ -87,6 +116,23 @@ namespace MiniAtmProject
             Thread.Sleep(1000);
             Environment.Exit(0);
         }
+
+        public static string MainMenu => $@"Merhaba {CurrentUser?.AccountID} - {CurrentUser?.Name} Anlık Olarak {CurrentUser?.Balance} TL Bakiyen var.
+Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
+
+1-Para Çek
+2-Para Yatır
+3-Bakiye Göster
+4-Ana Menüye Dön
+5-Çıkış Yap
+";
+
+        public static string StartMenu => @"Merhaba Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
+
+1-Kayıt Ol
+2-Giriş Yap
+3-Çıkış Yap
+";
 
     }
 }
