@@ -131,6 +131,42 @@ namespace MiniAtmProject
             Console.WriteLine($"Bakiyeniz: {CurrentUser.Balance}");
         }
 
+        public static void Transfer() 
+        {
+            Console.Clear();
+            Console.WriteLine("Transfer İşlemi");
+            Console.Write("Lütfen Transfer Etmek İstediğiniz Hesabın İsmini Girin: ");
+            string Name = Console.ReadLine()!;
+            var accounts = Database.CreateOrGetDatabase();
+            Account? transferAccount = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower());
+            if (transferAccount == null)
+            {
+                Console.Clear();
+                Console.WriteLine("Hesap Bulunamadı.");
+                Thread.Sleep(1000);
+                return;
+            }
+            Console.Clear();
+            Console.Write("Lütfen Transfer Etmek İstediğiniz Tutarı Girin: ");
+            decimal transferAmount = decimal.Parse(Console.ReadLine()!);
+            if (transferAmount > CurrentUser.Balance)
+            {
+                Console.Clear();
+                Console.WriteLine("Yetersiz Bakiye");
+                Thread.Sleep(1000);
+                return;
+            }
+            CurrentUser.Balance -= transferAmount;
+            transferAccount.Balance += transferAmount;
+            Console.Clear();
+            Console.WriteLine("Transfer İşlemi Başarılı.");
+            Thread.Sleep(1000);
+            Console.WriteLine($"Yeni Bakiyeniz: {CurrentUser.Balance}");
+            Thread.Sleep(1000);
+            Console.WriteLine($"{transferAccount.Name} Adlı kullanıcının Yeni Bakiyesi: {transferAccount.Balance}");
+            Thread.Sleep(1000);
+        }
+
 
         public static void Quit()
         {
@@ -155,8 +191,9 @@ Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
 1-Para Çek
 2-Para Yatır
 3-Bakiye Göster
-4-Ana Menüye Dön
-5-Çıkış Yap
+4-Para Transferi
+5-Ana Menüye Dön
+6-Çıkış Yap
 ";
 
         public static string StartMenu => @"Merhaba Lütfen Yapmak İstediğiniz İşlemi Seçiniz:

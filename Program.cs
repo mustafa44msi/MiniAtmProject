@@ -73,10 +73,14 @@ namespace MiniAtmProject
                         break;
                     case "4":
                         Console.Clear();
+                        ATM.Transfer();
+                        break;
+                    case "5":
+                        Console.Clear();
                         ATM.LogOut();
                         Main(args);
                         break;
-                    case "5":
+                    case "6":
                         ATM.Quit();
                         break;
                     default:
