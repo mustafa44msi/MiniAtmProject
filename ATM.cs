@@ -101,8 +101,8 @@ namespace MiniAtmProject
         {
 
             Console.Write("Yatırmak İstediğiniz Tutar: ");
-            decimal yatirilacakTutar = decimal.Parse(Console.ReadLine()!);
-            CurrentUser.Balance += yatirilacakTutar;
+            decimal depositValue = decimal.Parse(Console.ReadLine()!);
+            CurrentUser.Balance += depositValue;
             Console.Clear();
             Console.WriteLine("Para Yatırma İşlemi Başarılı.");
             Thread.Sleep(1000);
@@ -111,15 +111,15 @@ namespace MiniAtmProject
         public static void Withdraw(Account CurrentUser)
         {
             Console.Write("Çekmek İstediğiniz Tutarı Girin: ");
-            decimal cekilecekTutar = decimal.Parse(Console.ReadLine()!);
-            if (cekilecekTutar > CurrentUser.Balance)
+            decimal withdrawValue = decimal.Parse(Console.ReadLine()!);
+            if (withdrawValue > CurrentUser.Balance)
             {
                 Console.Clear();
                 Console.WriteLine("Yetersiz Bakiye");
             }
             else
             {
-                CurrentUser.Balance -= cekilecekTutar;
+                CurrentUser.Balance -= withdrawValue;
                 Console.Clear();
                 Console.WriteLine("Para Çekme İşlemi Başarılı.");
                 Thread.Sleep(1000);
@@ -131,7 +131,7 @@ namespace MiniAtmProject
             Console.WriteLine($"Bakiyeniz: {CurrentUser.Balance}");
         }
 
-        public static void Transfer() 
+        public static void Transfer()
         {
             Console.Clear();
             Console.WriteLine("Transfer İşlemi");
