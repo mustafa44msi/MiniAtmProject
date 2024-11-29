@@ -12,6 +12,7 @@ namespace MiniAtmProject
     internal class ATM
     {
         public static Account? CurrentUser { get; set; }
+
         public static void Menus()
         {
             CurrentUser = Database.CreateOrGetDatabase().FirstOrDefault();
@@ -37,6 +38,7 @@ namespace MiniAtmProject
             }
             accounts.Add(newUser);
         }
+
         public static void Login()
         {
             var accounts = Database.CreateOrGetDatabase();
@@ -48,8 +50,15 @@ namespace MiniAtmProject
 
             while (true)
             {
-                Console.Write("Lütfen İsminizi Girin: ");
+                Console.Write("Lütfen İsminizi Girin (Çıkmak için 'exit' yazın): ");
                 Name = Console.ReadLine()!;
+                if (Name.ToLower() == "exit")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Giriş İşlemi İptal Edildi Ana Menüye Dönülüyor.");
+                    Thread.Sleep(1000);
+                    Program.Main(new string[] { });
+                }
                 User = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower());
                 if (User != null)
                 {
@@ -87,8 +96,6 @@ namespace MiniAtmProject
                     Thread.Sleep(1500);
                     Console.Clear();
                 }
-
-
             }
         }
 
@@ -100,18 +107,37 @@ namespace MiniAtmProject
         public static void Deposit(Account CurrentUser)
         {
 
-            Console.Write("Yatırmak İstediğiniz Tutar: ");
-            decimal depositValue = decimal.Parse(Console.ReadLine()!);
+            Console.Write("Yatırmak İstediğiniz Tutar (Çıkmak için 'exit' yazın): ");
+            string depositTempValue = Console.ReadLine()!;
+            if (depositTempValue.ToLower() == "exit")
+            {
+                Console.Clear();
+                Console.WriteLine("Para Yatırma İşlemi İptal Edildi. Ana Menüye Dönülüyor");
+                Thread.Sleep(0500);
+                return;
+            }
+
+            decimal depositValue = decimal.Parse(depositTempValue);
             CurrentUser.Balance += depositValue;
             Console.Clear();
             Console.WriteLine("Para Yatırma İşlemi Başarılı.");
             Thread.Sleep(1000);
             Console.Write($"Yeni Bakiyeniz: {CurrentUser.Balance}");
         }
+
         public static void Withdraw(Account CurrentUser)
         {
-            Console.Write("Çekmek İstediğiniz Tutarı Girin: ");
-            decimal withdrawValue = decimal.Parse(Console.ReadLine()!);
+            Console.Write("Çekmek İstediğiniz Tutarı Girin (Çıkmak için 'exit' yazın): ");
+            string withdrawTempValue = Console.ReadLine()!;
+            if (withdrawTempValue.ToLower() == "exit")
+            {
+                Console.Clear();
+                Console.WriteLine("Para Çekme İşlemi İptal Edildi. Ana Menüye Dönülüyor");
+                Thread.Sleep(1000);
+                return;
+            }
+
+            decimal withdrawValue = decimal.Parse(withdrawTempValue);
             if (withdrawValue > CurrentUser.Balance)
             {
                 Console.Clear();
@@ -126,7 +152,8 @@ namespace MiniAtmProject
                 Console.Write($"Yeni Bakiyeniz: {CurrentUser.Balance}");
             }
         }
-        public static void ShowBalance(Account CurrentUser)
+
+        public static void ShowBalance(Account CurrentUser)//gereksiz amk
         {
             Console.WriteLine($"Bakiyeniz: {CurrentUser.Balance}");
         }
@@ -135,38 +162,59 @@ namespace MiniAtmProject
         {
             Console.Clear();
             Console.WriteLine("Transfer İşlemi");
-            Console.Write("Lütfen Transfer Etmek İstediğiniz Hesabın İsmini Girin: ");
-            string Name = Console.ReadLine()!;
-            var accounts = Database.CreateOrGetDatabase();
-            Account? transferAccount = accounts.FirstOrDefault(account => account.Name?.ToLower() == Name.ToLower());
-            if (transferAccount == null)
-            {
-                Console.Clear();
-                Console.WriteLine("Hesap Bulunamadı.");
-                Thread.Sleep(1000);
-                return;
-            }
-            Console.Clear();
-            Console.Write("Lütfen Transfer Etmek İstediğiniz Tutarı Girin: ");
-            decimal transferAmount = decimal.Parse(Console.ReadLine()!);
-            if (transferAmount > CurrentUser.Balance)
-            {
-                Console.Clear();
-                Console.WriteLine("Yetersiz Bakiye");
-                Thread.Sleep(1000);
-                return;
-            }
-            CurrentUser.Balance -= transferAmount;
-            transferAccount.Balance += transferAmount;
-            Console.Clear();
-            Console.WriteLine("Transfer İşlemi Başarılı.");
-            Thread.Sleep(1000);
-            Console.WriteLine($"Yeni Bakiyeniz: {CurrentUser.Balance}");
-            Thread.Sleep(1000);
-            Console.WriteLine($"{transferAccount.Name} Adlı kullanıcının Yeni Bakiyesi: {transferAccount.Balance}");
-            Thread.Sleep(1000);
-        }
+            Console.WriteLine($"{string.Join(new string('-', 20), Database.Accounts.Select(accounts => ($"\n\nID: {accounts.AccountID}\nKullanıcı İsmi: {accounts.Name}\nBakiye: {accounts.Balance}\n\n")))}\n\n");
+            Console.Write("Lütfen Transfer Etmek İstediğiniz Hesabın ID'sini Girin (Çıkmak için 'exit' yazın): ");
+            string TempID = Console.ReadLine()!;
 
+            if (TempID.ToLower() == "exit")
+            {
+                Console.Clear();
+                Console.WriteLine("Transfer işlemi iptal edildi. Ana menüye dönülüyor.");
+                Thread.Sleep(1000);
+                return;
+            }
+
+            try
+            {
+                var accounts = Database.CreateOrGetDatabase();
+                Account? transferAccount = accounts.FirstOrDefault(acc => acc.AccountID == int.Parse(TempID));
+
+                if (transferAccount == null)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Hesap Bulunamadı.");
+                    Thread.Sleep(1000);
+                    return;
+                }
+
+                Console.Clear();
+                Console.Write("Lütfen Transfer Etmek İstediğiniz Tutarı Girin: ");
+                decimal transferAmount = decimal.Parse(Console.ReadLine()!);
+                if (transferAmount > CurrentUser.Balance)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Yetersiz Bakiye");
+                    Thread.Sleep(1000);
+                    return;
+                }
+                CurrentUser.Balance -= transferAmount;
+                transferAccount.Balance += transferAmount;
+                Console.Clear();
+                Console.WriteLine("Transfer İşlemi Başarılı.");
+                Thread.Sleep(1000);
+                Console.WriteLine($"Yeni Bakiyeniz: {CurrentUser.Balance}");
+                Thread.Sleep(1000);
+                Console.WriteLine($"{transferAccount.AccountID} - {transferAccount.Name} Adlı kullanıcının Yeni Bakiyesi: {transferAccount.Balance}");
+                Thread.Sleep(1000);
+
+            }
+            catch (FormatException x)
+            {
+                Console.Clear();
+                Console.Write($"{x.Message} Bundan Dolayı İşleminiz Gerçekletirilememiştir.\nMenüye Dönmek için 'Enter' Tuşuna Basın.");
+                Console.ReadLine();
+            }
+        }
 
         public static void Quit()
         {
@@ -185,18 +233,17 @@ namespace MiniAtmProject
             Environment.Exit(0);
         }
 
-        public static string MainMenu => $@"Merhaba {CurrentUser?.AccountID} - {CurrentUser?.Name} Anlık Olarak {CurrentUser?.Balance} TL Bakiyen var.
+        public static string MainMenu => $@"Merhaba {CurrentUser.AccountID} - {CurrentUser.Name} Anlık Olarak {CurrentUser.Balance} TL Bakiyen var.
 Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
 
 1-Para Çek
 2-Para Yatır
-3-Bakiye Göster
-4-Para Transferi
-5-Ana Menüye Dön
-6-Çıkış Yap
+3-Para Transferi
+4-Ana Menüye Dön
+5-Çıkış Yap
 ";
 
-        public static string StartMenu => @"Merhaba Lütfen Yapmak İstediğiniz İşlemi Seçiniz:
+        public static string StartMenu => @"Merhaba Lütfen Yapmak İstediğiniz İşlemi Seçiniz
 
 1-Kayıt Ol
 2-Giriş Yap

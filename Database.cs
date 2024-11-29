@@ -9,25 +9,25 @@ namespace MiniAtmProject
 {
     internal static class Database
     {
-        private static List<Account> Accounts { get; set; } = new()
+        public static List<Account> Accounts { get; set; } = new()
         {
             new Account()
             {
                 Name = "Mustafa",
                 Pass = "1234",
-                Balance = 100000.00m
+                Balance = 1000000.00m
             },
             new Account()
             {
                 Name = "Kerim",
                 Pass = "1234",
-                Balance = 5000.00m
+                Balance = 5.00m
             },
             new Account()
             {
                 Name = "Dede",
                 Pass = "1234",
-                Balance = 1000.00m
+                Balance = 10.00m
             }
 
         };

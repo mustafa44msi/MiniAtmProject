@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 
 
@@ -23,11 +24,11 @@ namespace MiniAtmProject
             var accounts = Database.CreateOrGetDatabase().FirstOrDefault();
 
             string selectionStart;
-            while (true) 
+            while (true)
             {
                 GetStartMenu();
                 selectionStart = Console.ReadLine()!;
-                if (selectionStart == "1") 
+                if (selectionStart == "1")
                 {
                     ATM.SignUp();
                 }
@@ -68,19 +69,14 @@ namespace MiniAtmProject
                         break;
                     case "3":
                         Console.Clear();
-                        ATM.ShowBalance(accounts);
-                        Thread.Sleep(1500);
-                        break;
-                    case "4":
-                        Console.Clear();
                         ATM.Transfer();
                         break;
-                    case "5":
+                    case "4":
                         Console.Clear();
                         ATM.LogOut();
                         Main(args);
                         break;
-                    case "6":
+                    case "5":
                         ATM.Quit();
                         break;
                     default:
@@ -96,14 +92,14 @@ namespace MiniAtmProject
         {
             Console.Clear();
             Console.WriteLine(ATM.MainMenu);
-            Console.Write("Ana Sayfa>");
+            Console.Write("Giriş Sayfası>Kullanıcı Paneli>");
         }
 
         public static void GetStartMenu()
         {
             Console.Clear();
             Console.WriteLine(ATM.StartMenu);
-            Console.Write("Ana Sayfa>");
+            Console.Write("Giriş Sayfası>");
         }
 
     }

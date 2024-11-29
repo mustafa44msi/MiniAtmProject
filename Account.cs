@@ -18,7 +18,7 @@ namespace MiniAtmProject
         public string? Name { get; set; }
         public string? Pass { get; set; }
         public decimal Balance { get; set; }
-        public int AccountID { get; }
+        public int AccountID { get; private set; }
 
     }
 }
