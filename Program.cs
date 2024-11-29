@@ -60,12 +60,10 @@ namespace MiniAtmProject
                     case "1":
                         Console.Clear();
                         ATM.Withdraw(accounts);
-                        Thread.Sleep(1500);
                         break;
                     case "2":
                         Console.Clear();
                         ATM.Deposit(accounts);
-                        Thread.Sleep(1500);
                         break;
                     case "3":
                         Console.Clear();

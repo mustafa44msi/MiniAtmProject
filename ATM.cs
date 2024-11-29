@@ -113,7 +113,7 @@ namespace MiniAtmProject
             {
                 Console.Clear();
                 Console.WriteLine("Para Yatırma İşlemi İptal Edildi. Ana Menüye Dönülüyor");
-                Thread.Sleep(0500);
+                Thread.Sleep(1000);
                 return;
             }
 
