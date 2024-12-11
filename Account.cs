@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniAtmProject
 {
-    internal class Account
+    public class Account
     {
         private static int lastAccountID = 0;
 

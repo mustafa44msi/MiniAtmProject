@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MiniAtmProject
 {
-    internal class ATM
+    public static class ATM
     {
         public static Account? CurrentUser { get; set; }
 
